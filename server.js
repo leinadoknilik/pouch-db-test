@@ -4,8 +4,14 @@ var bodyParser = require("body-parser");
 var mongodb = require("mongodb");
 var ObjectID = mongodb.ObjectID;
 
+
+var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
+
+
 var CONTACTS_COLLECTION = "contacts";
 var EXPENSES_COLLECTION = "expenses";
+var USER_COLLECTION = "users";
+
 
 var app = express();
 //app.use(express.static(__dirname + "/public"));
@@ -136,4 +142,80 @@ app.delete("/contacts/:id", function(req, res) {
       res.status(204).end();
     }
   });
+});
+
+var apiRoutes = express.Router();
+
+// ---------------------------------------------------------
+// authentication (no middleware necessary since this isnt authenticated)
+// ---------------------------------------------------------
+// http://localhost:8080/api/authenticate
+apiRoutes.post('/authenticate', function(req, res) {
+
+
+	// find the user
+  db.collection(USER_COLLECTION).findOne({ _id: new ObjectID(req.params.id) }, function(err, doc) {
+
+		if (err) throw err;
+
+		if (!doc) {
+			res.json({ success: false, message: 'Authentication failed. User not found.' });
+		} else if (doc) {
+
+			// check if password matches
+			if (doc.password != doc.body.password) {
+				res.json({ success: false, message: 'Authentication failed. Wrong password.' });
+			} else {
+
+				// if user is found and password is right
+				// create a token
+				var token = jwt.sign(doc, app.get('superSecret'), {
+					expiresIn: 86400 // expires in 24 hours
+				});
+
+				res.json({
+					success: true,
+					message: 'Enjoy your token!',
+					token: token
+				});
+			}
+
+		}
+
+	});
+});
+
+// ---------------------------------------------------------
+// route middleware to authenticate and check token
+// ---------------------------------------------------------
+apiRoutes.use(function(req, res, next) {
+
+	// check header or url parameters or post parameters for token
+	var token = req.body.token || req.param('token') || req.headers['x-access-token'];
+
+	// decode token
+	if (token) {
+
+		// verifies secret and checks exp
+		jwt.verify(token, app.get('superSecret'), function(err, decoded) {
+			if (err) {
+				return res.json({ success: false, message: 'Failed to authenticate token.' });
+			} else {
+				// if everything is good, save to request for use in other routes
+				req.decoded = decoded;
+				next();
+			}
+		});
+
+	} else {
+
+		// if there is no token
+		// return an error
+		return res.status(403).send({
+			success: false,
+			message: 'No token provided.'
+		});
+
+	}
+
 });
