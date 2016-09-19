@@ -5,6 +5,7 @@ var mongodb = require("mongodb");
 var ObjectID = mongodb.ObjectID;
 
 var CONTACTS_COLLECTION = "contacts";
+var EXPENSES_COLLECTION = "expenses";
 
 var app = express();
 //app.use(express.static(__dirname + "/public"));
@@ -50,6 +51,33 @@ app.get("/contacts", function(req, res) {
       handleError(res, err.message, "Failed to get contacts.");
     } else {
       res.status(200).json(docs);
+    }
+  });
+});
+
+app.get("/expenses", function(req, res) {
+  db.collection(EXPENSES_COLLECTION).find({}).toArray(function(err, docs) {
+    if (err) {
+      handleError(res, err.message, "Failed to get contacts.");
+    } else {
+      res.status(200).json(docs);
+    }
+  });
+});
+
+app.post("/expenses", function(req, res) {
+  var newExpense = req.body;
+  newExpense.createDate = new Date();
+
+  if (!(req.body.category || req.body.value)) {
+    handleError(res, "Invalid user input", "Must provide a first or last name.", 400);
+  }
+
+  db.collection(EXPENSES_COLLECTION).insertOne(newExpense, function(err, doc) {
+    if (err) {
+      handleError(res, err.message, "Failed to create new contact.");
+    } else {
+      res.status(201).json(doc.ops[0]);
     }
   });
 });
