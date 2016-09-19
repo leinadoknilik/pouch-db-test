@@ -51,6 +51,7 @@ function handleError(res, reason, message, code) {
  *    POST: creates a new contact
  */
 
+
 app.get("/contacts", function(req, res) {
   db.collection(CONTACTS_COLLECTION).find({}).toArray(function(err, docs) {
     if (err) {
@@ -99,6 +100,23 @@ app.post("/contacts", function(req, res) {
   db.collection(CONTACTS_COLLECTION).insertOne(newContact, function(err, doc) {
     if (err) {
       handleError(res, err.message, "Failed to create new contact.");
+    } else {
+      res.status(201).json(doc.ops[0]);
+    }
+  });
+});
+
+app.post("/create-user", function(req, res) {
+  var newUser = req.body;
+  newUser.createDate = new Date();
+
+  if (!(req.body.firstName || req.body.lastName)) {
+    handleError(res, "Invalid user input", "Must provide a first or last name.", 400);
+  }
+
+  db.collection(USER_COLLECTION).insertOne(newUser, function(err, doc) {
+    if (err) {
+      handleError(res, err.message, "Failed to create new user.");
     } else {
       res.status(201).json(doc.ops[0]);
     }
