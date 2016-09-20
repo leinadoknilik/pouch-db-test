@@ -241,4 +241,4 @@ apiRoutes.get('/', function(req, res) {
 	res.json({ message: 'Welcome to the coolest API on earth!' });
 });
 
-app.use('/api', apiRoutes);
+app.use('/', apiRoutes);
