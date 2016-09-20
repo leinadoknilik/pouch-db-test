@@ -113,6 +113,7 @@ app.post("/create-user", function(req, res) {
   if (!(req.body.username && req.body.password)) {
 
     handleError(res, "Invalid user input", "Must provide a first or last name.", 400);
+      }
 
   db.collection(USER_COLLECTION).insertOne(newUser, function(err, doc) {
     if (err) {
@@ -121,7 +122,7 @@ app.post("/create-user", function(req, res) {
       res.status(201).json(doc.ops[0]);
     }
   });
-  }
+
 });
 
 /*  "/contacts/:id"
