@@ -23,7 +23,6 @@ mongoose.connect(process.env.MONGODB_URI); // connect to database
     var port = server.address().port;
     console.log("App now running on port", port);
   });
-});
 
 // CONTACTS API ROUTES BELOW
 
