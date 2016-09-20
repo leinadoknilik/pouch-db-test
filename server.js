@@ -4,9 +4,9 @@ var bodyParser = require("body-parser");
 var mongodb = require("mongodb");
 var ObjectID = mongodb.ObjectID;
 
-
+var mongoose    = require('mongoose');
 var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
-
+var User   = require('./app/models/user'); // get our mongoose model
 
 var CONTACTS_COLLECTION = "contacts";
 var EXPENSES_COLLECTION = "expenses";
@@ -19,7 +19,7 @@ app.use(bodyParser.json());
 
 // Create a database variable outside of the database connection callback to reuse the connection pool in your app.
 var db;
-
+mongoose.connect(process.env.MONGODB_URI); // connect to database
 // Connect to the database before starting the application server.
 mongodb.MongoClient.connect(process.env.MONGODB_URI, function (err, database) {
   if (err) {
@@ -107,21 +107,18 @@ app.post("/contacts", function(req, res) {
 });
 
 app.post("/create-user", function(req, res) {
-  var newUser = req.body;
-  newUser.createDate = new Date();
+  // create a sample user
+	var user = new User({
+		name: req.body.username,
+		password: req.body.password,
+		admin: true
+	});
+	user.save(function(err) {
+		if (err) throw err;
 
-  if (!(req.body.username && req.body.password)) {
-
-    handleError(res, "Invalid user input", "Must provide a first or last name.", 400);
-      }
-
-  db.collection(USER_COLLECTION).insertOne(newUser, function(err, doc) {
-    if (err) {
-      handleError(res, err.message, "Failed to create new user.");
-    } else {
-      res.status(201).json(doc.ops[0]);
-    }
-  });
+		console.log('User saved successfully');
+		res.json({ success: true });
+	});
 
 });
 
@@ -174,8 +171,9 @@ apiRoutes.post('/authenticate', function(req, res) {
 
 
 	// find the user
-  db.collection(USER_COLLECTION).findOne({ name:req.body.username }, function(err, doc) {
-
+  User.findOne({
+  		name: req.body.name
+  	}, function(err, user) {
 		if (err) throw err;
 
 		if (!doc) {
