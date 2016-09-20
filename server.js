@@ -110,9 +110,9 @@ app.post("/create-user", function(req, res) {
   var newUser = req.body;
   newUser.createDate = new Date();
 
-  if (!(req.body.firstName || req.body.lastName)) {
+  if (!(req.body.username && req.body.password)) {
+
     handleError(res, "Invalid user input", "Must provide a first or last name.", 400);
-  }
 
   db.collection(USER_COLLECTION).insertOne(newUser, function(err, doc) {
     if (err) {
@@ -121,6 +121,7 @@ app.post("/create-user", function(req, res) {
       res.status(201).json(doc.ops[0]);
     }
   });
+  }
 });
 
 /*  "/contacts/:id"
@@ -172,7 +173,7 @@ apiRoutes.post('/authenticate', function(req, res) {
 
 
 	// find the user
-  db.collection(USER_COLLECTION).findOne({ _id: new ObjectID(req.params.id) }, function(err, doc) {
+  db.collection(USER_COLLECTION).findOne({ name:req.body.username }, function(err, doc) {
 
 		if (err) throw err;
 
