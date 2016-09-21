@@ -149,7 +149,7 @@ apiRoutes.post("/create-expense", function(req, res) {
           var expense = new Expense({
         		description: req.body.desc,
         		value: req.body.value,
-            date: Date.now()
+            date: new Date(2017,10,23)
         	});
         	expense.save(function(err) {
         		if (err) throw err;
