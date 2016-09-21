@@ -10,10 +10,6 @@ var User   = require('./app/models/user'); // get our user mongoose model
 var Expense   = require('./app/models/expense'); // get our expense mongoose model
 var Income   = require('./app/models/income'); // get our income mongoose model
 
-
-var USER_COLLECTION = "users";
-
-
 var app = express();
 //app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.json());
@@ -150,7 +146,6 @@ apiRoutes.use(function(req, res, next) {
 
 apiRoutes.post("/create-expense", function(req, res) {
   // create a user
-  if(!req.body.desc && !req.body.value){
           var expense = new Expense({
         		description: req.body.desc,
         		value: req.body.value
@@ -160,8 +155,6 @@ apiRoutes.post("/create-expense", function(req, res) {
         		console.log('Expense saved successfully');
         		res.json({ success: true });
         	});
-    	}else{
-  res.json({ success: false });
 }
 });
 
@@ -173,7 +166,6 @@ apiRoutes.get('/incomes', function(req, res) {
 
 apiRoutes.post("/create-income", function(req, res) {
   // create a user
-  if(!req.body.desc && !req.body.value){
           var income = new Income({
         		description: req.body.desc,
         		value: req.body.value
@@ -183,8 +175,6 @@ apiRoutes.post("/create-income", function(req, res) {
         		console.log('Income saved successfully');
         		res.json({ success: true });
         	});
-    	}else{
-  res.json({ success: false });
 }
 });
 
