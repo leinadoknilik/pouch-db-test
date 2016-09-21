@@ -6,7 +6,8 @@ var ObjectID = mongodb.ObjectID;
 
 var mongoose    = require('mongoose');
 var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
-var User   = require('./app/models/user'); // get our mongoose model
+var User   = require('./app/models/user'); // get our user mongoose model
+var Expense   = require('./app/models/expense'); // get our expense mongoose model
 
 var USER_COLLECTION = "users";
 
@@ -68,6 +69,25 @@ app.post("/create-user", function(req, res) {
 
 });
 
+app.post("/create-expense", function(req, res) {
+  // create a user
+  if(!(req.body.desc == "") && !(req.body.value == "")){
+          var expense = new Expense({
+        		description: req.body.desc,
+        		value: req.body.value
+        	});
+        	expense.save(function(err) {
+        		if (err) throw err;
+        		console.log('Expense saved successfully');
+        		res.json({ success: true });
+        	});
+
+    	});
+}else{
+  res.json({ success: false });
+}
+
+});
 
 var apiRoutes = express.Router();
 
