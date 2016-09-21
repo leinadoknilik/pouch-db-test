@@ -51,7 +51,9 @@ app.post("/create-user", function(req, res) {
 		console.log('User saved successfully');
 		res.json({ success: true });
 	});
-}else(res.json({ success: false });)
+}else{
+  res.json({ success: false });
+}
 
 });
 
