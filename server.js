@@ -185,7 +185,7 @@ apiRoutes.get('/expenses', function(req, res) {
 });
 
 apiRoutes.get('/expenses-by-time', function(req, res) {
-	Expense.find({"date": {"$gte": new Date(request.body.year,request.body.month)}}, function(err, expenses) {
+	Expense.find({"date": {"$gte": new Date(request.params.year,request.params.month)}}, function(err, expenses) {
 		res.json(expenses);
 	});
 });
