@@ -8,6 +8,8 @@ var mongoose    = require('mongoose');
 var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var User   = require('./app/models/user'); // get our user mongoose model
 var Expense   = require('./app/models/expense'); // get our expense mongoose model
+var Income   = require('./app/models/income'); // get our income mongoose model
+
 
 var USER_COLLECTION = "users";
 
@@ -156,6 +158,29 @@ apiRoutes.post("/create-expense", function(req, res) {
         	expense.save(function(err) {
         		if (err) throw err;
         		console.log('Expense saved successfully');
+        		res.json({ success: true });
+        	});
+    	}else{
+  res.json({ success: false });
+}
+});
+
+apiRoutes.get('/incomes', function(req, res) {
+	Expense.find({}, function(err, expenses) {
+		res.json(expenses);
+	});
+});
+
+apiRoutes.post("/create-income", function(req, res) {
+  // create a user
+  if(!req.body.desc && !req.body.value){
+          var income = new Income({
+        		description: req.body.desc,
+        		value: req.body.value
+        	});
+        	income.save(function(err) {
+        		if (err) throw err;
+        		console.log('Income saved successfully');
         		res.json({ success: true });
         	});
     	}else{
