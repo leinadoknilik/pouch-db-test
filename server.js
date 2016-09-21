@@ -40,17 +40,28 @@ function handleError(res, reason, message, code) {
 app.post("/create-user", function(req, res) {
   // create a user
   if(req.body.secret == "nyuszi" && !(req.body.username == "") && !(req.body.password == "")){
-	var user = new User({
-		name: req.body.username,
-		password: req.body.password,
-		admin: true
-	});
-	user.save(function(err) {
-		if (err) throw err;
+    User.findOne({
+    		name: req.body.username
+    	}, function(err, user) {
 
-		console.log('User saved successfully');
-		res.json({ success: true });
-	});
+    		if (err) throw err;
+
+    		if (!user) {
+          var user = new User({
+        		name: req.body.username,
+        		password: req.body.password,
+        		admin: true
+        	});
+        	user.save(function(err) {
+        		if (err) throw err;
+        		console.log('User saved successfully');
+        		res.json({ success: true });
+        	});
+    		} else if (user) {
+          res.json({ success: false, message:"User already exist!" });
+    		}
+
+    	});
 }else{
   res.json({ success: false });
 }
