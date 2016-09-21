@@ -184,6 +184,14 @@ apiRoutes.get('/expenses', function(req, res) {
 	});
 });
 
+apiRoutes.get('/expenses-by-time', function(req, res) {
+	Expense.find({"date": {"$gte": new Date(2016, 9, 20), "$lt": new Date(2016, 9, 22)}}, function(err, expenses) {
+		res.json(expenses);
+	});
+});
+
+
+
 apiRoutes.get('/', function(req, res) {
 	res.json({ message: 'Welcome to the coolest API on earth!' });
 });
