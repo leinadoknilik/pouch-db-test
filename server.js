@@ -149,7 +149,7 @@ apiRoutes.post("/create-expense", function(req, res) {
           var expense = new Expense({
         		description: req.body.desc,
         		value: req.body.value,
-            date: new Date(2017,10,23)
+            date: Date.now()
         	});
         	expense.save(function(err) {
         		if (err) throw err;
@@ -185,9 +185,19 @@ apiRoutes.get('/expenses', function(req, res) {
 });
 
 apiRoutes.get('/expenses-by-time', function(req, res) {
-  console.log(req.param('year'));
-  console.log(req.param('month'));
-	Expense.find({"date": {"$gte": new Date(req.param('startyear')+','+req.param('startmonth')),"$lt": new Date(req.param('endyear')+','+req.param('endmonth'))}}, function(err, expenses) {
+	Expense.find(
+    {"date": {"$gte": new Date(req.param('startyear')+','+req.param('startmonth')),
+              "$lt": new Date(req.param('endyear')+','+req.param('endmonth'))}},
+
+    function(err, expenses) {
+		res.json(expenses);
+	});
+});
+
+apiRoutes.get('/income-by-time', function(req, res) {
+	Income.find({"date": {"$gte": new Date(req.param('startyear')+','+req.param('startmonth')),
+                        "$lt": new Date(req.param('endyear')+','+req.param('endmonth'))}},
+    function(err, expenses) {
 		res.json(expenses);
 	});
 });
