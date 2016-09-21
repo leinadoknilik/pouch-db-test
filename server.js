@@ -39,7 +39,7 @@ function handleError(res, reason, message, code) {
 
 app.post("/create-user", function(req, res) {
   // create a user
-  if(req.body.secret == "nyuszi" || req.body.username == "" || req.body.password == ""){
+  if(req.body.secret == "nyuszi" && req.body.username == "" && req.body.password == ""){
 	var user = new User({
 		name: req.body.username,
 		password: req.body.password,
