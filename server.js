@@ -155,7 +155,6 @@ apiRoutes.post("/create-expense", function(req, res) {
         		console.log('Expense saved successfully');
         		res.json({ success: true });
         	});
-}
 });
 
 apiRoutes.get('/incomes', function(req, res) {
@@ -175,7 +174,6 @@ apiRoutes.post("/create-income", function(req, res) {
         		console.log('Income saved successfully');
         		res.json({ success: true });
         	});
-}
 });
 
 apiRoutes.get('/expenses', function(req, res) {
