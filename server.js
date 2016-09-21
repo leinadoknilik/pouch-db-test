@@ -166,8 +166,8 @@ apiRoutes.post("/create-expense", function(req, res) {
 });
 
 apiRoutes.get('/incomes', function(req, res) {
-	Expense.find({}, function(err, expenses) {
-		res.json(expenses);
+	Income.find({}, function(err, incomes) {
+		res.json(incomes);
 	});
 });
 
