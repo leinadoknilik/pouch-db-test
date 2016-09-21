@@ -24,6 +24,7 @@ mongoose.connect(process.env.MONGODB_URI); // connect to database
     console.log("App now running on port", port);
   });
 
+
 // CONTACTS API ROUTES BELOW
 
 // Generic error handler used by all endpoints.
@@ -37,7 +38,8 @@ function handleError(res, reason, message, code) {
  */
 
 app.post("/create-user", function(req, res) {
-  // create a sample user
+  // create a user
+  if(req.body.secret == "nyuszi"){
 	var user = new User({
 		name: req.body.username,
 		password: req.body.password,
@@ -49,6 +51,7 @@ app.post("/create-user", function(req, res) {
 		console.log('User saved successfully');
 		res.json({ success: true });
 	});
+}else(res.json({ success: false });)
 
 });
 
