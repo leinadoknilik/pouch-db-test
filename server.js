@@ -148,7 +148,8 @@ apiRoutes.post("/create-expense", function(req, res) {
   // create a user
           var expense = new Expense({
         		description: req.body.desc,
-        		value: req.body.value
+        		value: req.body.value,
+            date: Date.now()
         	});
         	expense.save(function(err) {
         		if (err) throw err;
@@ -167,7 +168,8 @@ apiRoutes.post("/create-income", function(req, res) {
   // create a user
           var income = new Income({
         		description: req.body.desc,
-        		value: req.body.value
+        		value: req.body.value,
+            date: Date.now()
         	});
         	income.save(function(err) {
         		if (err) throw err;

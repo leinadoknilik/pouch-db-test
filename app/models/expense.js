@@ -5,4 +5,5 @@ var Schema = mongoose.Schema;
 module.exports = mongoose.model('Expense', new Schema({
 	description: String,
 	value: Number,
+  date:Date
 }));
