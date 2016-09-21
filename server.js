@@ -148,7 +148,7 @@ apiRoutes.use(function(req, res, next) {
 
 apiRoutes.post("/create-expense", function(req, res) {
   // create a user
-  if(!(req.body.desc == "") && !(req.body.value == "")){
+  if(!req.body.desc && !req.body.value)){
           var expense = new Expense({
         		description: req.body.desc,
         		value: req.body.value
@@ -161,6 +161,12 @@ apiRoutes.post("/create-expense", function(req, res) {
     	}else{
   res.json({ success: false });
 }
+});
+
+apiRoutes.get('/expenses', function(req, res) {
+	Expense.find({}, function(err, expenses) {
+		res.json(expenses);
+	});
 });
 
 apiRoutes.get('/', function(req, res) {
