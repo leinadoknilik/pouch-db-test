@@ -69,26 +69,6 @@ app.post("/create-user", function(req, res) {
 
 });
 
-app.post("/create-expense", function(req, res) {
-  // create a user
-  if(!(req.body.desc == "") && !(req.body.value == "")){
-          var expense = new Expense({
-        		description: req.body.desc,
-        		value: req.body.value
-        	});
-        	expense.save(function(err) {
-        		if (err) throw err;
-        		console.log('Expense saved successfully');
-        		res.json({ success: true });
-        	});
-
-    	});
-}else{
-  res.json({ success: false });
-}
-
-});
-
 var apiRoutes = express.Router();
 
 // ---------------------------------------------------------
@@ -163,6 +143,24 @@ apiRoutes.use(function(req, res, next) {
 
 	}
 
+});
+
+
+apiRoutes.post("/create-expense", function(req, res) {
+  // create a user
+  if(!(req.body.desc == "") && !(req.body.value == "")){
+          var expense = new Expense({
+        		description: req.body.desc,
+        		value: req.body.value
+        	});
+        	expense.save(function(err) {
+        		if (err) throw err;
+        		console.log('Expense saved successfully');
+        		res.json({ success: true });
+        	});
+    	}else{
+  res.json({ success: false });
+}
 });
 
 apiRoutes.get('/', function(req, res) {
